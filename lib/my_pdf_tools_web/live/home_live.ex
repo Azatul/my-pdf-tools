@@ -5,22 +5,26 @@ defmodule MyPdfToolsWeb.HomeLive do
     %{
       icon: "hero-document-duplicate",
       title: "Merge PDFs",
-      description: "Combine multiple PDF files into a single document. Reorder pages and keep everything in one place."
+      description: "Combine multiple PDFs into one. Reorder pages and keep everything in one place.",
+      path: "/merge"
     },
     %{
       icon: "hero-scissors",
       title: "Split & Extract",
-      description: "Split PDFs by page ranges or extract specific pages. Get exactly the content you need."
+      description: "Split by page ranges or extract specific pages when I need just part of a file.",
+      path: "/split"
     },
     %{
       icon: "hero-arrow-path",
       title: "Convert & Transform",
-      description: "Convert to and from PDF, compress files, and apply watermarks. Full control over your documents."
+      description: "Convert to/from PDF, compress, watermarks—whatever I need for my documents.",
+      path: "/convert"
     },
     %{
       icon: "hero-shield-check",
-      title: "Secure & Private",
-      description: "Your files are processed securely. No storage, no tracking—just the tools you need."
+      title: "Local & Private",
+      description: "Runs on my machine. No uploads to third parties, no accounts, no tracking.",
+      path: nil
     }
   ]
 
@@ -72,12 +76,25 @@ defmodule MyPdfToolsWeb.HomeLive do
             </p>
             <ul class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               <li :for={feature <- @features} class="group">
-                <div class="rounded-xl border border-base-300 bg-base-200/50 p-6 transition hover:border-primary/30 hover:shadow-md">
-                  <div class="flex size-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition group-hover:bg-primary/20">
-                    <.icon name={feature.icon} class="size-6" />
+                <div class={[
+                  "rounded-xl border border-base-300 bg-base-200/50 p-6 transition",
+                  feature.path && "hover:border-primary/30 hover:shadow-md cursor-pointer",
+                  !feature.path && "cursor-default"
+                ]}>
+                  <.link :if={feature.path} navigate={feature.path} class="block">
+                    <div class="flex size-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition group-hover:bg-primary/20">
+                      <.icon name={feature.icon} class="size-6" />
+                    </div>
+                    <h3 class="mt-4 font-semibold text-base-content">{feature.title}</h3>
+                    <p class="mt-2 text-sm text-base-content/70">{feature.description}</p>
+                  </.link>
+                  <div :if={!feature.path}>
+                    <div class="flex size-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <.icon name={feature.icon} class="size-6" />
+                    </div>
+                    <h3 class="mt-4 font-semibold text-base-content">{feature.title}</h3>
+                    <p class="mt-2 text-sm text-base-content/70">{feature.description}</p>
                   </div>
-                  <h3 class="mt-4 font-semibold text-base-content">{feature.title}</h3>
-                  <p class="mt-2 text-sm text-base-content/70">{feature.description}</p>
                 </div>
               </li>
             </ul>

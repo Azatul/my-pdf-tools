@@ -18,6 +18,9 @@ defmodule MyPdfToolsWeb.Router do
     pipe_through :browser
 
     live "/", HomeLive
+    live "/merge", MergeLive
+    live "/split", SplitLive
+    live "/convert", ConvertLive
   end
 
   # Other scopes may use custom stacks.
