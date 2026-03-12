@@ -4,6 +4,29 @@
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
 
+# Load .env in dev/test so DATABASE_PASSWORD etc. are set before env-specific config runs.
+# Done inline (no dependency) because config.exs runs before deps are compiled.
+if Mix.env() in [:dev, :test] do
+  env_path = Path.join(File.cwd!(), ".env")
+  if File.exists?(env_path) do
+    env_path
+    |> File.read!()
+    |> String.split(~r/\r?\n/, trim: false)
+    |> Enum.each(fn line ->
+      line = String.trim(line)
+      if line != "" and not String.starts_with?(line, "#") do
+        case String.split(line, "=", parts: 2) do
+          [key, value] ->
+            key = key |> String.trim() |> String.trim_leading("export ")
+            value = value |> String.trim() |> String.trim_leading("\"") |> String.trim_trailing("\"")
+            if key != "", do: System.put_env(key, value)
+          _ -> :ok
+        end
+      end
+    end)
+  end
+end
+
 # General application configuration
 import Config
 
